@@ -10,34 +10,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ItemListStore @Inject constructor(
-  private val getItemsUseCase: GetItemsUseCase,
   private val effectHandler: ItemListEffectHandler
 ) : ViewModel() {
-  private val store = Store<ItemListState, ItemListMessage, ItemListEffect>(
+  private val store = Store(
     initialState = ItemListState(isLoading = true),
     reducer = ItemListReducer(),
-    effectHandler = { effect ->
-      when (effect) {
-        is ItemListEffect.LoadItems -> {
-          try {
-            val items = getItemsUseCase()
-            ItemListMessage.ItemsLoaded(items.getOrThrow())
-          } catch (e: Exception) {
-            ItemListMessage.LoadingFailed(e.message ?: "Unknown error")
-          }
-        }
-        is ItemListEffect.NavigateToItemDetails -> null
-        is ItemListEffect.Retry -> {
-          try {
-            val items = getItemsUseCase()
-            ItemListMessage.ItemsLoaded(items.getOrThrow())
-          } catch (e: Exception) {
-            ItemListMessage.LoadingFailed(e.message ?: "Unknown error")
-          }
-        }
-        is ItemListEffect.ShowError -> Log.d("ItemListEffectHandler", "Error: ${effect.error}").let { null }
-      }
-    }
+    effectHandler = { effect -> effectHandler.handle(effect) }
   )
 
   // Делегируем свойства и методы нашему экземпляру store

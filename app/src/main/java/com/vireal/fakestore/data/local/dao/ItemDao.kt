@@ -14,9 +14,6 @@ interface ItemDao {
   @Query("SELECT * FROM item WHERE id = :id")
   fun getById(id: Int): ItemEntity?
 
-//  @Query("SELECT * FROM item WHERE category_id = :categoryId")
-//  fun getByCategoryId(categoryId: Int): List<ItemEntity>
-
   //insert item
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insert(item: ItemEntity)
