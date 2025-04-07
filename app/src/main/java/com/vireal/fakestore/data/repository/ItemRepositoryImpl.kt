@@ -38,11 +38,11 @@ private val mapper: ItemMapper
     Result.failure(e)
   }
 
-  override suspend fun getItemById(id: Int): Result<Item> = try {
+  override suspend fun getItemById(id: Int, forceUpdate: Boolean): Result<Item> = try {
     // Get item from local database
     val localItem = itemDao.getById(id)
 
-    if (localItem != null) {
+    if (localItem != null && !forceUpdate) {
       // If item is found in local database, return it as a Domain model
       Result.success(mapper.mapEntityToDomain(localItem))
     } else {

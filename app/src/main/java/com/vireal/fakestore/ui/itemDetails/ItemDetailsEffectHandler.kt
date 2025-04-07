@@ -11,7 +11,10 @@ class ItemDetailsEffectHandler @Inject constructor(
     return when (effect) {
       is ItemDetailsEffect.LoadItemDetails -> {
         try {
-          val itemDetails = getItemDetailsUseCase.getItemDetails(effect.itemId)
+          val itemDetails = getItemDetailsUseCase.getItemDetails(
+            id = effect.itemId,
+            forceUpdate = true
+          )
           ItemDetailsMessage.ItemDetailsLoaded(itemDetails.getOrThrow())
         } catch (e: Exception) {
           ItemDetailsMessage.LoadingFailed(e.message ?: "Unknown error")
@@ -22,7 +25,6 @@ class ItemDetailsEffectHandler @Inject constructor(
         ItemDetailsMessage.LoadingFailed(effect.error)
       }
       is ItemDetailsEffect.NavigateToCart -> null //TODO: Implement navigation to cart
-      is ItemDetailsEffect.NavigateBack -> null //TODO: Implement navigation back
     }
   }
 }

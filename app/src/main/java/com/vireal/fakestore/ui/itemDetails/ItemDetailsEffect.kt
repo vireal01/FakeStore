@@ -7,5 +7,4 @@ sealed class ItemDetailsEffect: Effect {
   data class AddToCart(val itemId: Int): ItemDetailsEffect()
   data class ShowError(val error: String): ItemDetailsEffect()
   data object NavigateToCart: ItemDetailsEffect()
-  data object NavigateBack: ItemDetailsEffect()
 }

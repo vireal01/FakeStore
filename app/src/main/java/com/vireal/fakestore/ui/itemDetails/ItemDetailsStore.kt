@@ -23,8 +23,8 @@ class ItemDetailsStore @Inject constructor(
   }
 
   // Not sure is that correct place to load item details
-  init {
-    state.value.itemDetails?.id?.let { ItemDetailsMessage.LoadItemDetails(it) }
-      ?.let { dispatch(it) }
-  }
+//  init {
+//    state.value.itemDetails?.id?.let { ItemDetailsMessage.LoadItemDetails(it) }
+//      ?.let { dispatch(it) }
+//  }
 }

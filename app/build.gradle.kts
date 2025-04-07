@@ -51,24 +51,26 @@ dependencies {
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(platform(libs.androidx.compose.bom))
   implementation(libs.bundles.compose)
-  implementation(libs.hilt.navigation.compose)
 
+  // Navigation
+  implementation(libs.androidx.navigation.compose)
+
+  // Network
   implementation(libs.squareup.retrofit2.retrofit)
   implementation(libs.squareup.retrofit2.gson)
-  implementation(libs.room.runtime)
   implementation(libs.logging.interceptor)
 
+  // Hilt
   implementation(libs.hilt.android)
   ksp(libs.hilt.compiler)
+  implementation(libs.hilt.navigation.compose)
 
   // Room
-  implementation(libs.room.runtime)
   implementation(libs.androidx.room.ktx)
+  implementation(libs.room.runtime)
   ksp(libs.room.compiler)
-  // If this project only uses Java source, use the Java annotationProcessor
-  // No additional plugins are necessary
 
-  // optional - Kotlin Extensions and Coroutines support for Room
+  // Testing
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)

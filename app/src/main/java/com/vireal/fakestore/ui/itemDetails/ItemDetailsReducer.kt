@@ -20,9 +20,6 @@ class ItemDetailsReducer: Reducer<ItemDetailsState, ItemDetailsMessage, ItemDeta
       is ItemDetailsMessage.AddToCart -> {
         state.copy(isLoading = false) to ItemDetailsEffect.AddToCart(message.itemId)
       }
-      is ItemDetailsMessage.NavigateBackClicked -> {
-        state.copy(isLoading = false) to ItemDetailsEffect.NavigateBack
-      }
     }
   }
 }

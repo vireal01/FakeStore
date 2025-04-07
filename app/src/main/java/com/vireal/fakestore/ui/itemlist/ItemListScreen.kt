@@ -1,4 +1,4 @@
-// itemlist/ItemListScreen.kt
+package com.vireal.fakestore.ui.itemlist
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,9 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.vireal.fakestore.domain.model.Item
-import com.vireal.fakestore.ui.itemlist.ItemListEffect
-import com.vireal.fakestore.ui.itemlist.ItemListMessage
-import com.vireal.fakestore.ui.itemlist.ItemListStore
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,19 +26,15 @@ fun ItemListScreen(
   onNavigateToDetail: (Int) -> Unit,
   store: ItemListStore = hiltViewModel()
 ) {
-  // Получаем текущее состояние из Store
   val state by store.state.collectAsState()
 
-  // Слушаем и обрабатываем эффекты навигации
   LaunchedEffect(true) {
-    // Предполагается, что в Store есть flow эффектов для наблюдения
     store.effects.collect { effect ->
       when (effect) {
         is ItemListEffect.NavigateToItemDetails -> {
           onNavigateToDetail(effect.itemId)
         }
-        // Другие эффекты не требуют обработки на уровне UI
-        else -> { /* игнорируем */ }
+        else -> {  }
       }
     }
   }
@@ -50,7 +44,6 @@ fun ItemListScreen(
       TopAppBar(
         title = { Text("Список товаров") },
         actions = {
-          // Фильтр товаров
           IconButton(onClick = {
 //            store.dispatch(ItemListMessage.FilterChanged(ItemFilter.POPULAR))
           }) {
@@ -67,16 +60,14 @@ fun ItemListScreen(
     ) {
       when {
         state.isLoading -> {
-          // Отображаем загрузку
           CircularProgressIndicator(
             modifier = Modifier.align(Alignment.Center)
           )
         }
 
         state.error != null -> {
-          // Отображаем ошибку
 //          ErrorView(
-//            message = state.error ?: "Неизвестная ошибка",
+//            message = state.error ?: "Unknown error",
 //            onRetryClick = {
 //              store.dispatch(ItemListMessage.RetryClicked)
 //            },
@@ -85,21 +76,18 @@ fun ItemListScreen(
         }
 
         state.items.isEmpty() -> {
-          // Отображаем пустой список
 //          EmptyView(
-//            message = "Товары не найдены",
+//            message = "No items found",
 //            modifier = Modifier.align(Alignment.Center)
 //          )
         }
 
         else -> {
-          // Отображаем список товаров
           LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
           ) {
-            // Фильтры (если нужны)
             item {
 //              FilterChips(
 //                selectedFilter = state.filter,
@@ -109,7 +97,6 @@ fun ItemListScreen(
 //              )
             }
 
-            // Список товаров
             items(state.items) { item ->
               ItemCard(
                 item = item,
@@ -125,7 +112,6 @@ fun ItemListScreen(
   }
 }
 
-// Компонент для фильтров
 @Composable
 private fun FilterChips(
   selectedFilter: ItemFilter,
@@ -138,7 +124,7 @@ private fun FilterChips(
       .padding(bottom = 8.dp),
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
-    ItemFilter.values().forEach { filter ->
+    ItemFilter.entries.forEach { filter ->
       FilterChip(
         selected = filter == selectedFilter,
         onClick = { onFilterSelected(filter) },
@@ -148,7 +134,6 @@ private fun FilterChips(
   }
 }
 
-// Enum для фильтров
 enum class ItemFilter(val displayName: String) {
   ALL("Все"),
   POPULAR("Популярные"),

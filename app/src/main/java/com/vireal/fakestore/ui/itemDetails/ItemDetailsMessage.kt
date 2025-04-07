@@ -8,5 +8,4 @@ sealed class ItemDetailsMessage: Message {
   data class ItemDetailsLoaded(val itemDetails: Item): ItemDetailsMessage()
   data class LoadingFailed(val error: String): ItemDetailsMessage()
   data class AddToCart(val itemId: Int): ItemDetailsMessage()
-  data object NavigateBackClicked: ItemDetailsMessage()
 }
