@@ -76,10 +76,11 @@ fun ItemListScreen(
         }
 
         state.items.isEmpty() -> {
-//          EmptyView(
-//            message = "No items found",
-//            modifier = Modifier.align(Alignment.Center)
-//          )
+          Text(
+            text = "No items found",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.align(Alignment.Center)
+          )
         }
 
         else -> {
