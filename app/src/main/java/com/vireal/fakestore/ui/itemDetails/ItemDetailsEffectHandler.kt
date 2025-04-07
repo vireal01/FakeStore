@@ -1,5 +1,6 @@
 package com.vireal.fakestore.ui.itemDetails
 
+import android.util.Log
 import com.vireal.fakestore.domain.usecase.GetItemDetailsUseCase
 import com.vireal.fakestore.ui.base.EffectHandler
 import javax.inject.Inject
@@ -11,20 +12,41 @@ class ItemDetailsEffectHandler @Inject constructor(
     return when (effect) {
       is ItemDetailsEffect.LoadItemDetails -> {
         try {
-          val itemDetails = getItemDetailsUseCase.getItemDetails(
+          Log.d("ItemDetailsEffectHandler", "Loading item details for ID: ${effect.itemId}")
+
+          val result = getItemDetailsUseCase.getItemDetails(
             id = effect.itemId,
             forceUpdate = true
           )
-          ItemDetailsMessage.ItemDetailsLoaded(itemDetails.getOrThrow())
+
+          if (result.isSuccess) {
+            val item = result.getOrThrow()
+            Log.d("ItemDetailsEffectHandler", "Successfully loaded item: ${item.title}")
+            ItemDetailsMessage.ItemDetailsLoaded(item)
+          } else {
+            val error = result.exceptionOrNull()?.message ?: "Unknown error"
+            Log.e("ItemDetailsEffectHandler", "Error loading item: $error")
+            ItemDetailsMessage.LoadingFailed(error)
+          }
         } catch (e: Exception) {
+          Log.e("ItemDetailsEffectHandler", "Exception loading item: ${e.message}", e)
           ItemDetailsMessage.LoadingFailed(e.message ?: "Unknown error")
         }
       }
-      is ItemDetailsEffect.AddToCart -> null //TODO: Implement add to cart
+      is ItemDetailsEffect.AddToCart -> {
+        // TODO: Implement add to cart functionality
+        Log.d("ItemDetailsEffectHandler", "Add to cart: ${effect.itemId}")
+        null
+      }
       is ItemDetailsEffect.ShowError -> {
+        Log.e("ItemDetailsEffectHandler", "Error: ${effect.error}")
         ItemDetailsMessage.LoadingFailed(effect.error)
       }
-      is ItemDetailsEffect.NavigateToCart -> null //TODO: Implement navigation to cart
+      is ItemDetailsEffect.NavigateToCart -> {
+        // Navigation will be handled in the screen
+        Log.d("ItemDetailsEffectHandler", "Navigate to cart")
+        null //
+      }
     }
   }
 }

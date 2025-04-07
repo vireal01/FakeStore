@@ -42,12 +42,12 @@ fun ItemListScreen(
   Scaffold(
     topBar = {
       TopAppBar(
-        title = { Text("Список товаров") },
+        title = { Text("Fake shop items") },
         actions = {
           IconButton(onClick = {
 //            store.dispatch(ItemListMessage.FilterChanged(ItemFilter.POPULAR))
           }) {
-            Icon(Icons.Default.Search, contentDescription = "Фильтр")
+            Icon(Icons.Default.Search, contentDescription = "Filter")
           }
         }
       )
@@ -135,10 +135,10 @@ private fun FilterChips(
 }
 
 enum class ItemFilter(val displayName: String) {
-  ALL("Все"),
-  POPULAR("Популярные"),
-  NEW("Новые"),
-  DISCOUNTED("Со скидкой")
+  ALL("All"),
+  POPULAR("Popular"),
+  NEW("New"),
+  DISCOUNTED("On Sale");
 }
 
 

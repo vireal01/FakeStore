@@ -1,5 +1,6 @@
 package com.vireal.fakestore.ui.itemDetails
 
+import android.util.Log
 import com.vireal.fakestore.ui.base.Reducer
 
 class ItemDetailsReducer: Reducer<ItemDetailsState, ItemDetailsMessage, ItemDetailsEffect> {
@@ -9,16 +10,30 @@ class ItemDetailsReducer: Reducer<ItemDetailsState, ItemDetailsMessage, ItemDeta
   ): Pair<ItemDetailsState, ItemDetailsEffect?> {
     return when (message) {
       is ItemDetailsMessage.LoadItemDetails -> {
-        state.copy(isLoading = true) to ItemDetailsEffect.LoadItemDetails(message.itemId)
+        Log.d("ItemDetailsReducer", "Loading item details: ${message.itemId}")
+        state.copy(
+          isLoading = true,
+          errorMessage = null,
+          itemDetails = null
+        ) to ItemDetailsEffect.LoadItemDetails(message.itemId)
       }
       is ItemDetailsMessage.ItemDetailsLoaded -> {
-        state.copy(isLoading = false, itemDetails = message.itemDetails) to null
+        Log.d("ItemDetailsReducer", "Item details loaded: ${message.itemDetails.title}")
+        state.copy(
+          isLoading = false,
+          itemDetails = message.itemDetails,
+          errorMessage = null
+        ) to null
       }
       is ItemDetailsMessage.LoadingFailed -> {
-        state.copy(isLoading = false, errorMessage = message.error) to null
+        Log.e("ItemDetailsReducer", "Loading failed: ${message.error}")
+        state.copy(
+          isLoading = false,
+          errorMessage = message.error
+        ) to null
       }
       is ItemDetailsMessage.AddToCart -> {
-        state.copy(isLoading = false) to ItemDetailsEffect.AddToCart(message.itemId)
+        state.copy(isLoading = true) to ItemDetailsEffect.AddToCart(message.itemId)
       }
     }
   }
