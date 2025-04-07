@@ -1,8 +1,6 @@
 package com.vireal.fakestore.ui.itemlist
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.vireal.fakestore.domain.usecase.GetItemsUseCase
 import com.vireal.fakestore.ui.base.Store
 import dagger.hilt.android.lifecycle.HiltViewModel
 
@@ -18,7 +16,6 @@ class ItemListStore @Inject constructor(
     effectHandler = { effect -> effectHandler.handle(effect) }
   )
 
-  // Делегируем свойства и методы нашему экземпляру store
   val state = store.state
   val effects = store.effects
 
