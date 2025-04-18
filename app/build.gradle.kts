@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
@@ -79,4 +81,70 @@ dependencies {
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
 
+}
+
+@CacheableTask
+abstract class GenerateBuildInfoTask : DefaultTask() {
+  @get:Input
+  var commitHash: String = "none"
+
+  @get:Input
+  var buildDateTime: String = "none"
+
+  @get:OutputFile
+  val outputFile: File = File(project.projectDir, "build/outputs/apk/build-info.txt")
+
+  @TaskAction
+  fun performTask() {
+    val buildInfo = "Build date: $buildDateTime\nCommit hash: $commitHash"
+    outputFile.parentFile.mkdirs()
+    outputFile.writeText(buildInfo)
+    println("Build info generated:\n $buildInfo\n into ${outputFile.absolutePath}")
+  }
+}
+
+tasks.register<GenerateBuildInfoTask>("generateBuildInfo") {
+  commitHash = getLastCommitHash()
+
+  buildDateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").format(System.currentTimeMillis())
+
+
+  doFirst {
+    println("Create build info creation...")
+  }
+  doLast {
+    println("Created build info successfully!")
+    if (outputFile.exists()) {
+      val content = outputFile.readText()
+      println(content)
+    } else {
+      println("File build-info.txt not found.")
+    }
+  }
+}
+
+afterEvaluate {
+  tasks.named("assembleDebug") {
+    dependsOn("generateBuildInfo")
+  }
+}
+
+fun getLastCommitHash(): String {
+  return try {
+    val process = ProcessBuilder("git", "rev-parse", "--short", "HEAD")
+      .redirectErrorStream(true)
+      .start()
+
+    val output = process.inputStream.bufferedReader().use { it.readText().trim() }
+    val exitCode = process.waitFor()
+
+    if (exitCode == 0 && output.isNotEmpty()) {
+      output
+    } else {
+      "unknown-commit"
+    }
+  } catch (e: Exception) {
+    println("Failed to get commit hash: ${e.message}")
+    "unknown-commit"
+  }
 }
