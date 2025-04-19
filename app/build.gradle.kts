@@ -5,6 +5,7 @@ plugins {
   id("com.google.dagger.hilt.android")
   id("dagger.hilt.android.plugin")
   id("com.google.devtools.ksp") version "2.1.20-1.0.31"
+  alias(libs.plugins.build.info)
 }
 
 android {
